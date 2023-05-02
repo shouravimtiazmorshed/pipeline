@@ -19,7 +19,7 @@ pipeline {
                // Set up CodeQL environment variables
                 withEnv(["PATH+CODEQL=D:\\DevOps\\codeql\\:$PATH"]) {
                     
-                    bat 'codeql database init --language=java --source-root=. my-database mvn clean package'
+                    bat 'codeql database init --language=java --source-root=. my-database '
                     bat 'codeql analyze --database=my-database --format=sarif-latest --output=results.sarif'
                 
                 }
