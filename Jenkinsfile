@@ -22,7 +22,7 @@ pipeline {
     stage('CodeQL Scan') {
             steps {
                 // Use the CodeQL tool to run a scan
-                bat '${scannerHome}/codeql database analyze --language=${language} --format=sarif-latest --output=results.sarif ${database} ${queriesDir}'
+                bat 'D:\\DevOps\\codeql\\codeql database analyze --language=${language} --format=sarif-latest --output=results.sarif ${database} ${queriesDir}'
             }
         }
         stage('Publish Results') {
