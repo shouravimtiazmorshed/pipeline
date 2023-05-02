@@ -19,7 +19,7 @@ pipeline {
                // Set up CodeQL environment variables
                 withEnv(["PATH+CODEQL=D:\\DevOps\\codeql\\:$PATH"]) {
                     
-                    bat 'codeql database init --language=java --source-root=. my-database '
+                    bat 'codeql database init --language=java --source-root=. --overwrite my-database '
                     // Add the CodeQL query repository as a Git submodule
         bat 'git submodule add https://github.com/github/codeql-java.git'
 
