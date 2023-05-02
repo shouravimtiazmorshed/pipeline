@@ -26,7 +26,7 @@ pipeline {
         bat 'codeql resolve languages'
 
         // Run the CodeQL analysis
-        bat 'codeql analyze --database=my-database --sarif-path=results.sarif codeql-java/java-security-extended.qls'
+        bat 'codeql analyze --database=my-database  --sarif-path=results.sarif D:\\DevOps\\Reports\\pipeline.ql'
       
                 
                 }
