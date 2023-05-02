@@ -1,15 +1,7 @@
 
 pipeline {
     agent any
-tools {
-        maven 'Maven3.9.1' 
-        CodeQL 'CodeQL'
-    }
-    environment {
-        DATE = new Date().format('yy.M')
-        TAG = "${DATE}.${BUILD_NUMBER}"
-        
-    }
+
 
     stages {
         stage('Checkout') {
