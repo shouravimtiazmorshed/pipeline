@@ -16,7 +16,7 @@ pipeline {
                    // bat 'codeql database init --language=java --source-root=. --command="mvn clean package" my-database --overwrite'
                      bat 'codeql database create my-database --language=java --source-root=.\\  --verbose --overwrite'
                     bat 'codeql resolve languages'
-                    bat 'codeql database finalize my-database'
+                   // bat 'codeql database finalize my-database'
                     bat 'codeql database analyze my-database --format=sarif-latest --output=results.sarif D:\\DevOps\\Reports\\pipeline.ql'
                 
             }
