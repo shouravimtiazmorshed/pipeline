@@ -13,7 +13,7 @@ pipeline {
         stage('CodeQL Scan') {
             steps {
                 withEnv(["PATH+CODEQL=D:\\DevOps\\codeql\\:$PATH"]) {
-                    bat 'codeql database init --language=java --command="mvn clean package" --source-root=. --name=my-database --overwrite my-database'
+                    bat 'codeql database init --language=java --command='mvn clean package' --source-root=. --name=my-database --overwrite my-database --language-version 16.0 --force'
                     bat 'codeql resolve languages'
                     bat 'codeql database finalize my-database'
                     bat 'codeql database analyze my-database --format=sarif-latest --output=results.sarif D:\\DevOps\\Reports\\pipeline.ql'
