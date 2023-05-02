@@ -26,13 +26,21 @@ pipeline {
         bat 'codeql resolve languages'
 
         // Run the CodeQL analysis
-        bat 'codeql analyze --database=my-database  --sarif-path=results.sarif D:\\DevOps\\Reports\\pipeline.ql'
+        bat 'codeql database analyze my-database  --sarif-path=results.sarif D:\\DevOps\\Reports\\pipeline.ql --format=sarif-latest'
       
                 
                 }
             }
         }
- 
+  stage('Publish Results') {
+  steps {
+               // Set up CodeQL environment variables
+                withEnv(["PATH+CODEQL=D:\\DevOps\\codeql\\:$PATH"]) {
+        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, reportDir: 'D:\\DevOps\\Reports\\', reportFiles: 'results.html', reportName: 'CodeQL Results'])
+        recordIssues(tools: [codeQL(pattern: '**/results.sarif')])
+        }
+        }
+    }
         
     }
 }
