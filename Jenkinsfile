@@ -19,7 +19,7 @@ pipeline {
                // Set up CodeQL environment variables
                 withEnv(["PATH+CODEQL=D:\\DevOps\\codeql\\:$PATH"]) {
                     
-                    bat 'codeql database init --language=java --source-root=. --overwrite my-database --command="mvn clean package"'
+                    bat 'codeql database init --language=java --command='mvn clean install -DskipTests' --source-root=. --overwrite my-database '
                     
 
         // Install any required dependencies for the CodeQL queries
