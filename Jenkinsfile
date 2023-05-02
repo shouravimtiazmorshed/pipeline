@@ -18,11 +18,7 @@ pipeline {
         language = 'your-codeql-language'
     }
     stages {
-        stage('Checkout') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'your-git-credentials-id', url: 'your-git-repo-url']]])
-            }
-        }
+  
         stage('CodeQL scan') {
             steps {
                 withCodeql() {
