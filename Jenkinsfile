@@ -26,7 +26,7 @@ pipeline {
         bat 'codeql resolve languages'
 
         // Run the CodeQL analysis
-        bat 'codeql database analyze my-database --format=sarif-latest --output=results.sarif D:\DevOps\Reports\pipeline.ql'
+        bat 'codeql database analyze my-database --format=sarif-latest --output=results.sarif D:\\DevOps\\Reports\\pipeline.ql'
       
                 
                 }
