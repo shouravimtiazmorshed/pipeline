@@ -19,13 +19,20 @@ pipeline {
     }
     stages {
   
-        stage('CodeQL scan') {
+    stage('CodeQL Scan') {
             steps {
-                withCodeql() {
-                    
-
-                    codeqlCli(cmd: "database analyze --output sarif --sarif-category-property impact -o results.sarif --format-summary -s ${database} ${scannerHome}/bin/codeql ${scannerHome}/codeql-home/semmle/codeql-java-queries/java ${language} ${queriesDir}")
-                }
+                // Use the CodeQL tool to run a scan
+                sh "${scannerHome}/codeql/codeql-cli/codeql database analyze --language=${language} --format=sarif-latest --output=results.sarif ${database} ${queriesDir}"
+            }
+        }
+        stage('Publish Results') {
+            steps {
+                // Publish the CodeQL results in Jenkins
+                recordIssues(
+                    tool: codeql(
+                        pattern: 'results.sarif'
+                    )
+                )
             }
         }
         stage('Maven build') {
