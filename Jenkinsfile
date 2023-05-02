@@ -17,7 +17,7 @@ pipeline {
                      bat 'codeql database create my-database --language=java --source-root=.\\  --verbose --overwrite'
                     bat 'codeql resolve languages'
                    // bat 'codeql database finalize my-database'
-                    bat 'codeql database analyze my-database --format=sarif-latest --output=results.sarif D:\\DevOps\\Reports\\pipeline.ql'
+                    bat 'codeql database analyze my-database --format=sarif-latest --output=D:\\DevOps\\Reports\\results.sarif D:\\DevOps\\Reports\\pipeline.ql'
                 
             }
         }
