@@ -3,7 +3,7 @@ pipeline {
     agent any
 tools {
         maven 'Maven3.9.1' 
-        CodeQL 'CodeQLcli'
+        CodeQL 'CodeQL'
     }
     environment {
         DATE = new Date().format('yy.M')
