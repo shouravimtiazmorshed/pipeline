@@ -27,7 +27,8 @@ pipeline {
 
         // Run the CodeQL analysis
         bat 'codeql database analyze my-database --format=sarif-latest --output=results.sarif D:\\DevOps\\Reports\\pipeline.ql'
-      
+      // finalize database
+      bat 'codeql database finalize my-database'
                 
                 }
             }
