@@ -7,7 +7,16 @@ pipeline {
         codeql 'CodeQL'
     }
     
-
+    environment {
+        // Define scannerHome as an environment variable using the CodeQL tool
+        scannerHome = tool 'CodeQL'
+        // Define queriesDir as an environment variable
+        queriesDir = 'your-codeql-queries-dir'
+        // Define database as an environment variable
+        database = 'your-codeql-database'
+        // Define language as an environment variable
+        language = 'your-codeql-language'
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -17,10 +26,7 @@ pipeline {
         stage('CodeQL scan') {
             steps {
                 withCodeql() {
-                    def scannerHome = tool 'CodeQL'
-                    def queriesDir = 'your-codeql-queries-dir'
-                    def database = 'your-codeql-database'
-                    def language = 'your-codeql-language'
+                    
 
                     codeqlCli(cmd: "database analyze --output sarif --sarif-category-property impact -o results.sarif --format-summary -s ${database} ${scannerHome}/bin/codeql ${scannerHome}/codeql-home/semmle/codeql-java-queries/java ${language} ${queriesDir}")
                 }
@@ -28,7 +34,7 @@ pipeline {
         }
         stage('Maven build') {
             steps {
-                sh 'mvn clean package'
+                 bat 'mvn -B -DskipTests clean package' 
             }
         }
     }
