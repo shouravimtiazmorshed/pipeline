@@ -1,5 +1,15 @@
+
 pipeline {
     agent any
+tools {
+        maven 'Maven3.9.1' 
+        CodeQL 'CodeQLcli'
+    }
+    environment {
+        DATE = new Date().format('yy.M')
+        TAG = "${DATE}.${BUILD_NUMBER}"
+        
+    }
 
     stages {
         stage('Checkout') {
@@ -9,18 +19,13 @@ pipeline {
         }
         stage('CodeQL scan') {
             steps {
-                stage('CodeQL setup') {
-                    steps {
-                        def scannerHome = tool 'CodeQL'
-                    }
-                }
-                stage('CodeQL run') {
-                    steps {
-                        def queriesDir = 'your-codeql-queries-dir'
-                        def database = 'your-codeql-database'
-                        def language = 'your-codeql-language'
-                        codeqlCli(cmd: "database analyze --output sarif --sarif-category-property impact -o results.sarif --format-summary -s ${database} ${scannerHome}/bin/codeql ${scannerHome}/codeql-home/semmle/codeql-java-queries/java ${language} ${queriesDir}")
-                    }
+                withCodeql() {
+                    def scannerHome = tool 'CodeQL'
+                    def queriesDir = 'your-codeql-queries-dir'
+                    def database = 'your-codeql-database'
+                    def language = 'your-codeql-language'
+
+                    codeqlCli(cmd: "database analyze --output sarif --sarif-category-property impact -o results.sarif --format-summary -s ${database} ${scannerHome}/bin/codeql ${scannerHome}/codeql-home/semmle/codeql-java-queries/java ${language} ${queriesDir}")
                 }
             }
         }
