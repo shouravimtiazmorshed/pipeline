@@ -1,62 +1,28 @@
 pipeline {
-     agent any
-    tools {
-        maven 'Maven3.9.1' 
-    }
-    environment {
-        DATE = new Date().format('yy.M')
-        TAG = "${DATE}.${BUILD_NUMBER}"
-    }
-    stages {
-        stage('Build') { 
-        
-            steps {
-                bat 'mvn -B -DskipTests clean package' 
-            }
-        }
-        
-      stage('CodeQL Scan') {
-            steps {
-                //withEnv(['JAVA_HOME=C:\\Program Files\\Java\\jdk1.8.0_281', 'PATH+MAVEN=C:\\apache-maven-3.8.3\\bin']) {
-               // withEnv(){
-                    
-                
+    agent any
 
-                    bat 'codeql database create jenkins-database --language=java --source-root=.\\ --exclude=.\\**\\target\\** --verbose'
-                    bat 'codeql database analyze jenkins-database jenkins-codeql-results --format=sarif-latest --verbose'
-                //}
-            }
-        }
-        
-        stage('Publish Results') {
+    stages {
+        stage('Checkout') {
             steps {
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, includes: '**/codeql-results.*/codeql-scan.sarif', keepAll: true, reportDir: 'F:\\Shourav\\Reports', reportFiles: 'codeql-results.html', reportName: 'CodeQL Results'])
-                archiveArtifacts artifacts: 'codeql-results.*'
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'your-git-credentials-id', url: 'your-git-repo-url']]])
             }
         }
-         stage('Copy'){
-      		steps {
-               
-          		bat ("copy target\\*.jar F:\\Shourav")
-        		
-      			}
-    	}
-    	
-    	 stage('TestRun') {
+        stage('CodeQL scan') {
             steps {
-            	//def command = "cmd /c start F:\\Shourav\\Java\\bin\\javaw -jar F:\\Shourav\\gateway-0.0.1.jar"
-            	//command.execute()
-            	 bat ("cmd /c start /b F:\\Shourav\\Java\\bin\\javaw -jar F:\\Shourav\\gateway.jar >> F:\\Shourav\\JenkinsCmd.txt 2>&1")
-            	// bat ("cmd /c start  F:\\Shourav\\Java\\bin\\javaw -jar F:\\Shourav\\gateway.jar ")
-               //bat ("F:\\Shourav\\Java\\bin\\javaw -jar F:\\Shourav\\gateway.jar")
+                withCodeql() {
+                    def scannerHome = tool 'CodeQL'
+                    def queriesDir = 'your-codeql-queries-dir'
+                    def database = 'your-codeql-database'
+                    def language = 'your-codeql-language'
+
+                    codeqlCli(cmd: "database analyze --output sarif --sarif-category-property impact -o results.sarif --format-summary -s ${database} ${scannerHome}/bin/codeql ${scannerHome}/codeql-home/semmle/codeql-java-queries/java ${language} ${queriesDir}")
+                }
             }
         }
-        
-        stage('Testing') {
+        stage('Maven build') {
             steps {
-                bat ("F:\\Shourav\\nodejs\\newman run F:\\Shourav\\Jenkins_test_postman_collection.json  --disable-unicode  --reporters cli,json --reporter-json-export  F:\\Shourav\\JenkinsTestReport.json")
+                sh 'mvn clean package'
             }
         }
-    
     }
 }
